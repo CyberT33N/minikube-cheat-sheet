@@ -1,21 +1,24 @@
-# minikube-cheat-sheet
+# Minikube cheatsheet
 
 
 
 
 
-<br><br>
-<br><br>
-_______________________________
-_______________________________
-<br><br>
-<br><br>
+
+
+
+
+
 
 
 # ufw
 ```shell
 sudo ufw allow out on <yourAdapter> from fe80::/64 to any port 22
 ```
+
+
+
+
 
 
 
@@ -272,3 +275,174 @@ minikube start \
 - **Funktion:** Automatisiert die Bereitstellung von Persistent Volumes (PV) in Kubernetes.
 - **Nutzen:** Erleichtert das dynamische Erstellen und Verwalten von Speicherressourcen für Pods, ohne manuelle PV-Konfiguration.
 - **Verwendung:** Praktisch für Anwendungen, die persistenten Speicher benötigen, wie Datenbanken oder Stateful Applications.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+_______________________________
+_______________________________
+<br><br>
+<br><br>
+
+# Deployment
+```shell
+kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+
+# Check k9s or
+kubectl get services hello-minikube
+
+# The easiest way to access this service is to let minikube launch a web browser for you:
+minikube service hello-minikube
+
+# Alternatively, use kubectl to forward the port:
+kubectl port-forward service/hello-minikube 7080:8080
+```
+
+
+<br><br>
+<br><br>
+
+
+## Loadbalancer Deployment
+```shell
+# To access a LoadBalancer deployment, use the “minikube tunnel” command. Here is an example deployment:
+kubectl create deployment balanced --image=kicbase/echo-server:1.0
+kubectl expose deployment balanced --type=LoadBalancer --port=8080
+
+# In another window, start the tunnel to create a routable IP for the ‘balanced’ deployment:
+minikube tunnel
+
+# To find the routable IP, run this command and examine the EXTERNAL-IP column:
+kubectl get services balanced
+
+# Your deployment is now available at <EXTERNAL-IP>:8080
+```
+
+
+
+
+
+
+<br><br>
+<br><br>
+
+
+## Ingress
+- `minikube addons enable ingress`
+
+- The following example creates simple echo-server services and an Ingress object to route to these services.
+```shell
+kind: Pod
+apiVersion: v1
+metadata:
+  name: foo-app
+  labels:
+    app: foo
+spec:
+  containers:
+    - name: foo-app
+      image: 'kicbase/echo-server:1.0'
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-service
+spec:
+  selector:
+    app: foo
+  ports:
+    - port: 8080
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: bar-app
+  labels:
+    app: bar
+spec:
+  containers:
+    - name: bar-app
+      image: 'kicbase/echo-server:1.0'
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: bar-service
+spec:
+  selector:
+    app: bar
+  ports:
+    - port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: /foo
+            backend:
+              service:
+                name: foo-service
+                port:
+                  number: 8080
+          - pathType: Prefix
+            path: /bar
+            backend:
+              service:
+                name: bar-service
+                port:
+                  number: 8080
+---
+
+```
+
+Apply the contents
+```shell
+kubectl apply -f https://storage.googleapis.com/minikube-site-examples/ingress-example.yaml
+```
+
+Wait for ingress address
+```shell
+kubectl get ingress
+NAME              CLASS   HOSTS   ADDRESS          PORTS   AGE
+example-ingress   nginx   *       <your_ip_here>   80      5m45s
+```
+
+Note for Docker Desktop Users:
+To get ingress to work you’ll need to open a new terminal window and run minikube tunnel and in the following step use 127.0.0.1 in place of <ip_from_above>.
+
+Now verify that the ingress works
+```shell
+$ curl <ip_from_above>/foo
+Request served by foo-app
+...
+
+$ curl <ip_from_above>/bar
+Request served by bar-app
+...
+```
