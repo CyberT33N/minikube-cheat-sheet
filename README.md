@@ -161,6 +161,7 @@ echo "Minikube Loadbalancer can be accessed with ${FROM_IP}.nip.io"
 
 
 
+
 <br><br>
 <br><br>
 _______________________________
@@ -191,6 +192,11 @@ minikube start --driver=docker
 - **Anwendungsfall:** Docker eignet sich besser für Anwendungen, die schnelle Iteration und geringere Ressourcen benötigen. KVM2 ist besser für Anwendungen, die stärkere Isolation und Virtualisierung benötigen.
 
 Für die meisten Entwicklungs- und Testaufgaben wäre Docker die bevorzugte Wahl aufgrund seiner Geschwindigkeit und Einfachheit. KVM2 wäre vorzuziehen, wenn eine stärkere Isolation und Kompatibilität mit verschiedenen Workloads erforderlich ist.
+
+
+
+
+
 
 
 
