@@ -22,6 +22,16 @@ sudo ufw allow out on <yourAdapter> from fe80::/64 to any port 22
 
 
 
+
+
+
+
+
+
+
+
+
+
 <br><br>
 <br><br>
 _______________________________
@@ -31,6 +41,15 @@ _______________________________
 
 ## Guide
 - https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download
+
+
+
+
+
+
+
+
+
 
 
 
@@ -145,6 +164,7 @@ echo "Minikube Loadbalancer can be accessed with ${FROM_IP}.nip.io"
       ```
       sudo ufw allow out on nordlynx from fe80::/64 to any port 22
       ```
+
 
 
 
@@ -286,6 +306,40 @@ minikube start \
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+_______________________________
+_______________________________
+<br><br>
+<br><br>
+
+# SSH
+```shell
+minikube ssh
+```
+
+<br><br>
+
+## Run Command
+```shell
+minikube ssh "ls /etc/ssl/certs"
+
+```
 
 
 
