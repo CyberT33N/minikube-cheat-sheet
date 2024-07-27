@@ -338,7 +338,15 @@ minikube ssh
 ## Run Command
 ```shell
 minikube ssh "ls /etc/ssl/certs"
+```
 
+<br><br>
+
+### Sudo inside POD
+- `--user root`
+```
+minikube ssh
+docker exec -it --user root 73ab2f3556ee bash -c "cp /tmp/minio.local.com.crt /etc/gitlab-runner/certs/minio.local.com.crt"
 ```
 
 
