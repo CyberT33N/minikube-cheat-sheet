@@ -349,6 +349,11 @@ minikube ssh
 docker exec -it --user root 73ab2f3556ee bash -c "cp /tmp/minio.local.com.crt /etc/gitlab-runner/certs/minio.local.com.crt"
 ```
 
+### Copy file from host machine into specific pod
+```shell
+cat minio.local.com.crt | minikube ssh "docker exec -it --user root 73ab2f3556ee bash -c \"tee ./tmp/minio.local.com.crt\""
+minikube ssh "docker exec -it --user root 73ab2f3556ee bash -c \"ls /tmp\""
+```
 
 
 
